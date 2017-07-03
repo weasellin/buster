@@ -2,7 +2,7 @@
 
 Usage:
   buster.py setup [--gh-repo=<repo-url>] [--dir=<path>]
-  buster.py generate [--domain=<local-address>] [--dir=<path>]
+  buster.py generate [--domain=<local-address>] [--target-domain=<target-address>] [--dir=<path>]
   buster.py preview [--dir=<path>]
   buster.py deploy [--dir=<path>]
   buster.py add-domain <domain-name> [--dir=<path>]
@@ -10,11 +10,12 @@ Usage:
   buster.py --version
 
 Options:
-  -h --help                 Show this screen.
-  --version                 Show version.
-  --dir=<path>              Absolute path of directory to store static pages.
-  --domain=<local-address>  Address of local ghost installation [default: localhost:2368].
-  --gh-repo=<repo-url>      URL of your gh-pages repository.
+  -h --help                         Show this screen.
+  --version                         Show version.
+  --dir=<path>                      Absolute path of directory to store static pages.
+  --domain=<local-address>          Address of local ghost installation [default: localhost:2368].
+  --gh-repo=<repo-url>              URL of your gh-pages repository.
+  --target-domain=<target-address>  Address of your target domain.
 """
 
 import os
@@ -70,6 +71,19 @@ def main():
                     new_href = re.sub(r'/index\.html$', '/', new_href)
                     e.attr('href', new_href)
                     print "\t", href, "=>", new_href
+            link_element_types = ['script', 'meta', 'a', 'link', 'img', 'amp-img']
+            link_attributes = ['href', 'content', 'src', 'url']
+            for element_type in link_element_types:
+                for element in d(element_type):
+                    e = PyQuery(element)
+                    for a in link_attributes:
+                        old_a = e.attr(a)
+                        if old_a:
+                            new_a = old_a.replace(arguments['--domain'], arguments['--target-domain'])
+                            new_a = re.sub(r'^[a-z]+://', '//', new_a)
+                            e.attr(a, new_a)
+                            print "\t", old_a, "=>", new_a
+
             if parser == 'html':
                 return d.html(method='html').encode('utf8')
             return d.__unicode__().encode('utf8')
