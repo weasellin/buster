@@ -17,9 +17,10 @@ The interface
 
       Creates a GIT repository inside ``static/`` directory.
 
-``generate [--domain=<local-address>]``
+``generate [--domain=<local-address>] [--target-domain=<target-address>]``
 
-      Generates static pages from locally running Ghost instance.
+      Generates static pages from locally running Ghost instance
+      to the target domain you prepare to publish.
 
 ``preview``
 
