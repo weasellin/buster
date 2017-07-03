@@ -19,8 +19,7 @@ The interface
 
 ``generate [--domain=<local-address>] [--target-domain=<target-address>]``
 
-      Generates static pages from locally running Ghost instance
-      to the target domain you prepare to publish.
+      Generates static pages from locally running Ghost instance to the target domain you prepare to publish.
 
 ``preview``
 
